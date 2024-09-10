@@ -1,0 +1,65 @@
+Apple Inc. AAPL
+Microsoft Corp. MSFT
+Alphabet Inc. GOOGL
+Amazon.com Inc. AMZN
+NVIDIA Corp. NVDA
+JPMorgan Chase & Co. JPM
+Bank of America Corp. BAC
+Goldman Sachs Group Inc. GS
+Citigroup Inc. C
+Morgan Stanley MS
+Johnson & Johnson JNJ
+Pfizer Inc. PFE
+UnitedHealth Group Inc. UNH
+AbbVie Inc. ABBV
+Merck & Co., Inc. MRK
+Tesla Inc. TSLA
+The Home Depot Inc. HD
+Nike Inc. NKE
+McDonald’s Corp. MCD
+Starbucks Corp. SBUX
+The Procter & Gamble Co. PG
+Coca-Cola Co. KO
+PepsiCo Inc. PEP
+Walmart Inc. WMT
+Mondelez International Inc. MDLZ
+Exxon Mobil Corp. XOM
+Chevron Corp. CVX
+ConocoPhillips COP
+Schlumberger NV SLB
+NextEra Energy Inc. NEE
+Duke Energy Corp. DUK
+Dominion Energy Inc. D
+Southern Co. SO
+American Electric Power Co., Inc. AEP
+Xcel Energy Inc. XEL
+General Electric Co. GE
+Honeywell International Inc. HON
+Lockheed Martin Corp. LMT
+Caterpillar Inc. CAT
+Boeing Co. BA
+American Tower Corp. AMT
+Prologis Inc. PLD
+Equinix Inc. EQIX
+Public Storage PSA
+Simon Property Group Inc. SPG
+Meta Platforms Inc. META
+Verizon Communications Inc. VZ
+Walt Disney Co. DIS
+Comcast Corp. CMCSA
+AT&T Inc. T
+The Sherwin-Williams Co. SHW
+Dow Inc. DOW
+Linde plc LIN
+Newmont Corporation NEM
+Freeport-McMoRan Inc. FCX
+Intel Corp. INTC
+Advanced Micro Devices, Inc. AMD
+Salesforce, Inc. CRM
+Cisco Systems, Inc. CSCO
+Oracle Corp. ORCL
+Ford Motor Co. F
+General Motors Co. GM
+Ferrari N.V. RACE
+Toyota Motor Corp. TM
+Honda Motor Co., Ltd. HMC
