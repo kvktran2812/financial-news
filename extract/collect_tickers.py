@@ -64,7 +64,7 @@ def get_all_tickers(t_per_page=500) -> List[List[str]]:
     table = soup.find("table", {"id": "main-table"})
     data = get_table_body_data(table)
     n = get_number_of_tickers(soup)
-    n = n // 500
+    n = n // t_per_page
     
 
     for i in range(n):
