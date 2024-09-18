@@ -12,6 +12,15 @@ import math
 
 
 def get_number_of_tickers(html: str) -> int:
+    """
+    Get the number of tickers from the html
+
+    Args:
+        html (str): The input html, looks for the h2 tag and retrieve data from there
+
+    Returns:
+        int: The number of tickers
+    """
     n = 0
 
     h2 = html.find("h2")
@@ -22,6 +31,15 @@ def get_number_of_tickers(html: str) -> int:
 
 
 def get_table_head_data(table: str) -> List[str]:
+    """
+    Get the head data from the table tag, useful for csv header
+
+    Args:
+        table (str): table tag from html
+
+    Returns:
+        List[str]: a list of head information
+    """
     thead_data = []
     thead = table.find('thead')
     ths = thead.find_all("th")
@@ -32,7 +50,16 @@ def get_table_head_data(table: str) -> List[str]:
     return thead_data
 
 
-def get_table_body_data(table, n: int = -1) -> List[List[str]]:
+def get_table_body_data(table) -> List[List[str]]:
+    """
+    Get the body data from the table tag
+
+    Args:
+        table (_type_): table tag from html
+
+    Returns:
+        List[List[str]]: a list of body information
+    """
     tbody_data = []
     tbody = table.find("tbody")
     trs = tbody.find_all('tr')
@@ -45,6 +72,16 @@ def get_table_body_data(table, n: int = -1) -> List[List[str]]:
 
 
 def get_all_tickers(t_per_page=500) -> List[List[str]]:
+    """
+    Get all tickers from stockanalysis website
+
+    Args:
+        t_per_page (int, optional): The number of tickers per page. Defaults to 500.
+
+    Returns:
+        List[List[str]]: a list of all tickers
+    """
+    # setup url and data variable
     url = "https://stockanalysis.com/stocks/"
     data = None
     
@@ -66,7 +103,7 @@ def get_all_tickers(t_per_page=500) -> List[List[str]]:
     n = get_number_of_tickers(soup)
     n = n // t_per_page
     
-
+    # go to next page and keep fetching data until reach last ticker
     for i in range(n):
         next_button.click()
         time.sleep(0.5)
@@ -77,8 +114,10 @@ def get_all_tickers(t_per_page=500) -> List[List[str]]:
         t_data = get_table_body_data(table)
         data.extend(t_data)
 
+    # close driver
     driver.quit()
     
+    # return data
     return data
 
 
