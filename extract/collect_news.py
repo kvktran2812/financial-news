@@ -3,7 +3,6 @@ import requests
 from pymongo import MongoClient
 
 
-
 def get_daily_news():
     url = "https://ca.finance.yahoo.com/topic/news/"
     response = requests.get(url)
@@ -17,12 +16,14 @@ def get_daily_news():
         a = h3.find("a")
         link = a.get("href")
         para = get_article_text(link)
-        
-        data.append({
-            "title": a.text,
-            "link": a.get("href"),
-            "content": para,
-        })
+
+        data.append(
+            {
+                "title": a.text,
+                "link": a.get("href"),
+                "content": para,
+            }
+        )
     return data
 
 
@@ -43,7 +44,7 @@ def get_article_text(url):
 
 if __name__ == "__main__":
     data = get_daily_news()
-    
+
     client = MongoClient("mongodb://localhost:27017/")
     db = client["mydatabase"]
     collection = db["mycollection"]

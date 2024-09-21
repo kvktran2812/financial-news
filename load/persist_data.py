@@ -13,7 +13,7 @@ collection.insert_one(document)
 documents = [
     {"name": "Bob", "age": 25, "city": "Los Angeles"},
     {"name": "Charlie", "age": 35, "city": "Chicago"},
-    {"name": "Diana", "age": 28, "city": "Miami"}
+    {"name": "Diana", "age": 28, "city": "Miami"},
 ]
 collection.insert_many(documents)
 
