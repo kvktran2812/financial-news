@@ -125,4 +125,8 @@ def get_ticker_detail() -> Dict[str, str]:
     return
 
 
-get_all_tickers()
+if __name__ == "__main__":
+    data = get_all_tickers()
+    for member in data:
+        print(member)
+    print(len(data))
