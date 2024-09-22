@@ -42,11 +42,11 @@ def get_article_text(url):
     return data
 
 
-if __name__ == "__main__":
-    data = get_daily_news()
+# if __name__ == "__main__":
+#     data = get_daily_news()
 
-    client = MongoClient("mongodb://localhost:27017/")
-    db = client["mydatabase"]
-    collection = db["mycollection"]
+#     client = MongoClient("mongodb://localhost:27017/")
+#     db = client["mydatabase"]
+#     collection = db["mycollection"]
 
-    collection.insert_many(data)
+#     collection.insert_many(data)
