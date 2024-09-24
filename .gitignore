@@ -1,2 +1,4 @@
 venv/
 web_driver
+__pycache__/
+try.py
