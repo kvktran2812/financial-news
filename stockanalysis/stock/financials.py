@@ -13,15 +13,64 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # define constants
 BASE_URL = "https://stockanalysis.com/stocks/"
+BALANCE_SHEET = "balance-sheet"
+CASH_FLOW = "cash-flow-statement"
+RATIOS = "ratios"
+
+# fiscal period type
 FM_ANNUAL = 1
 FM_QUARTERLY = 2
 FM_TTM = 3
 
 
-def get_income_statement(stock: str, fiscal_period: str = "annually") -> List:
-    
-    
+def get_number_of_columns(rows):
+    first_row = rows[0]
+    headers = first_row.find_all("th")
+    columns = list(filter(lambda h: h["id"] != "header-title" and h["id"] != "header-cell", headers))
+    return len(columns)
+
+
+def get_data_from_thead(rows, data, n):
+    first_row = rows[0]
+    headers = first_row.find_all("th")
+    columns = list(filter(lambda h: h["id"] != "header-title" and h["id"] != "header-cell", headers))
+
+    fiscal_period = headers[0].text.strip()
+
+    for i in range(n):
+        data[i][fiscal_period] = columns[i].text.strip()
+        data[i]["Period Ending"] = columns[i]["id"]
     return 
+
+
+def get_data_from_tbody(rows, data, n):
+    for row in rows:
+        t_data = row.find_all("td")
+        attribute = t_data[0].text.strip()
+
+        for i in range(n):
+            data[i][attribute] = t_data[i+1].text.strip()
+
+
+def get_income_statement(stock: str):
+    url = "https://stockanalysis.com/stocks/aapl/financials/"
+    response = requests.get(url)
+    html = response.text
+    soup = BeautifulSoup(html, "lxml")
+    table = soup.find("table", {"id": "main-table"})
+    thead = table.find("thead")
+    tbody = table.find("tbody")
+    head_rows = thead.find_all("tr")
+    body_rows = tbody.find_all("tr")
+    
+    # Data initialization
+    n = get_number_of_columns(head_rows)
+    data = [{} for _ in range(n)]
+
+    get_data_from_thead(head_rows, data, n)
+    get_data_from_tbody(body_rows, data, n)
+    
+    return data
 
 
 def get_balance_sheet(stock: str, fiscal_period: str = "annually") -> List:
