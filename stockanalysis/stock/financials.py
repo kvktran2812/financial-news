@@ -1,15 +1,9 @@
-import time
-import math
+# TODO: Organize and optimize this code
+# TODO: Add docstring
+
 import requests
 from bs4 import BeautifulSoup
-from typing import List, Sequence, Dict, Tuple
-
-# Selenium
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from typing import List
 
 # define constants
 BASE_URL = "https://stockanalysis.com/stocks"
