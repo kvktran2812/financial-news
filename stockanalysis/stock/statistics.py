@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from typing import List, Dict
-from constants import BASE_URL, STATISTICS, MARKET_CAP, REVENUE
+from stockanalysis.stock.constants import BASE_URL, STATISTICS, MARKET_CAP, REVENUE
+from stockanalysis.utils import *
 
 
 def compute_statistics_url(stock: str) -> str:
@@ -44,29 +45,6 @@ def get_total_evaluation(stock: str) -> Dict[str, str]:
             data[attribute] = get_data_from_table(table)
     
     print(data)
-
-
-def get_market_cap(stock: str) -> Dict[str, str]:
-    url = BASE_URL + "/" + stock + "/" + MARKET_CAP
-    data = {}
-
-    response = requests.get(url)
-    html = response.text
-    soup = BeautifulSoup(html, "lxml")
-    main = soup.find("main")
-
-    possible_div = main.find_all("div")
-    targeted_div = filter(lambda div: len(div.find_all("div", recursive=False)) == 6, possible_div)
-    targeted_div = list(targeted_div)
-
-    if len(targeted_div) != 1:
-        raise ValueError("Something went wrong, can not find market cap information")
-    else:
-        all_div = targeted_div[0].find_all("div", recursive=False)
-        for div in all_div:
-            print(div.text.strip())
-    
-    return data
 
 
 def filter_market_cap(div):

@@ -11,7 +11,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-
+# import modules
+from stockanalysis.utils import *
 
 def get_number_of_stocks(html: str) -> int:
     """
@@ -140,21 +141,14 @@ def get_stock_overview(stock: str) -> Dict[str, str]:
     url = "https://stockanalysis.com/stocks/" + stock
 
     response = requests.get(url)
-    if response.status_code != 200:
-        raise ConnectionError(f"The status code after request '{url}' is {response.status_code}")
-
     html = response.text
     soup = BeautifulSoup(html, "lxml")
-
     main = soup.find("main", {"id": "main"})
     tables = main.find_all("table")
     
     for table in tables:
-        rows = table.find_all("tr")
-        for row in rows:
-            td = row.find_all("td")
-            if td[0].text not in data:
-                data[td[0].text] = td[1].text
+        t_data = get_data_from_listed_table(table)
+        data.update(t_data)
     
     return data
 
@@ -168,55 +162,6 @@ def get_stock_news_press_release(stock: str) -> List[Dict[str, str]]:
 
     Returns:
         List[Dict[str, str]]: a list of news and press release information
-    """
-    data = list()
-    url = "https://stockanalysis.com/stocks/" + stock
-
-    # setup chrome
-    chrome_options = Options()
-    driver = webdriver.Chrome(options=chrome_options)
-    wait = WebDriverWait(driver, 10)
-
-    # send request to website     
-    driver.get(url)
-    elements = wait.until(EC.presence_of_element_located((By.ID, 'main')))
-    button = driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/div[2]/div/div[1]/div/ul/li[3]/button')
-    button.click()
-    time.sleep(0.5)
-    elements = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div[3]/div[2]/div/div[2]')))
-    
-    # fetch data and retrive useful information
-    html = elements.get_attribute("innerHTML")
-    soup = BeautifulSoup(html, 'lxml')
-    body = soup.find("body")
-    news = body.find_all("div", recursive=False)
-
-    for single_news in news:
-        title = single_news.find("h3").text
-        link = single_news.find("a").get("href")
-        summary = single_news.find("p").text
-        time_upload = single_news.find("div", {"class": "mt-1 text-sm text-faded sm:order-1 sm:mt-0"}).get("title")
-        data.append({
-            "title": title,
-            "link": link,
-            "summary": summary,
-            "time_upload": time_upload
-        })
-
-    driver.quit()
-        
-    return data
-
-
-def get_stock_news_press_release(stock: str) -> List[Dict[str, str]]:
-    """
-    Get stock news and press release from stockanalysis
-
-    Args:
-        stock (str): _description_
-
-    Returns:
-        List[Dict[str, str]]: _description_
     """
     data = list()
     url = "https://stockanalysis.com/stocks/" + stock

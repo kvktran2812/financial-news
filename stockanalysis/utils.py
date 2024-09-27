@@ -41,3 +41,16 @@ def get_data_from_time_series_table(table):
 
 def get_data_from_multi_period_comparison_table(table):
     return
+
+
+
+
+
+def print_dict(dictionary):
+    for key, value in dictionary.items():
+        print(f"{key}: {value}")
+
+
+def print_list(list):
+    for item in list:
+        print(item)
