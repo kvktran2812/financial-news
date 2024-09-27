@@ -22,6 +22,7 @@ def get_data_from_table(table):
 
     return data
 
+
 def get_total_evaluation(stock: str) -> Dict[str, str]:
     data = {}
     url = compute_statistics_url(stock)
@@ -68,12 +69,23 @@ def get_market_cap(stock: str) -> Dict[str, str]:
     return data
 
 
-
 def filter_market_cap(div):
     h2 = div.find("h2")
     if h2 is None:
         return False
     elif h2.text.strip() != "Market Cap History":
+        return False
+    elif div.find("table") is None:
+        return False
+    else: 
+        return True
+    
+
+def filter_revenue(div):
+    h2 = div.find("h2")
+    if h2 is None:
+        return False
+    elif h2.text.strip() != "Revenue History":
         return False
     elif div.find("table") is None:
         return False
@@ -96,7 +108,6 @@ def get_market_cap_history(stock: str) -> List:
     table = target_div.find("table")
     tbody = table.find("tbody")
     rows = tbody.find_all("tr")
-    
 
     for row in rows:
         td = row.find_all("td")
@@ -109,4 +120,31 @@ def get_market_cap_history(stock: str) -> List:
     return data
 
 
-print(get_market_cap_history("aapl"))
+def get_revenue_history(stock: str) -> List:
+    url = BASE_URL + "/" + stock + "/" + REVENUE
+    data = []
+
+    response = requests.get(url)
+    html = response.text
+    soup = BeautifulSoup(html, "lxml")
+    main = soup.find("main")
+    possible_div = main.find_all("div")
+    tareted_div = list(filter(filter_revenue, possible_div))
+    target_div = tareted_div[0]
+
+    table = target_div.find("table")
+    tbody = table.find("tbody")
+    rows = tbody.find_all("tr")
+
+    for row in rows:
+        td = row.find_all("td")
+        date = td[0].text.strip()
+        revenue = td[1].text.strip()
+        percent_change = td[2].text.strip()
+
+        data.append([date, revenue, percent_change])
+
+    return data
+
+
+print(get_revenue_history("aapl"))
