@@ -2,7 +2,6 @@ altair==5.4.1
 annotated-types==0.7.0
 anyio==4.6.0
 apache-beam==2.48.0
-apache-flink==1.20.0
 apache-flink-libraries==1.20.0
 attrs==24.2.0
 avro-python3==1.10.2
