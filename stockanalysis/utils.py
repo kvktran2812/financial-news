@@ -20,11 +20,9 @@ def get_data_from_time_series_table(table):
     # compute meta data
     metadata = []
     thead = table.find("thead")
-    rows = thead.find_all("tr")
-    for row in rows:
-        th = row.find_all("th")
-        attributes = [t.text.strip() for t in th]
-        metadata.append(attributes)
+    row = thead.find("tr")
+    th = row.find_all("th")
+    metadata = [t.text.strip() for t in th]
 
     # compute data
     data = []
