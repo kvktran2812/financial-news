@@ -10,20 +10,6 @@ def compute_statistics_url(stock: str) -> str:
     return url
 
 
-def get_data_from_table(table):
-    rows = table.find_all("tr")
-    data = {}
-
-    for row in rows:
-        td = row.find_all("td")
-        attribute = td[0].text.strip()
-        value = td[1].text.strip()
-
-        data[attribute] = value
-
-    return data
-
-
 def get_total_evaluation(stock: str) -> Dict[str, str]:
     data = {}
     url = compute_statistics_url(stock)
@@ -42,9 +28,9 @@ def get_total_evaluation(stock: str) -> Dict[str, str]:
 
         if attribute not in data:
             table = div.find("table")
-            data[attribute] = get_data_from_table(table)
+            data[attribute] = get_data_from_listed_table(table)
     
-    print(data)
+    return data
 
 
 def filter_market_cap(div):
@@ -84,16 +70,7 @@ def get_market_cap_history(stock: str) -> List:
     target_div = tareted_div[0]
 
     table = target_div.find("table")
-    tbody = table.find("tbody")
-    rows = tbody.find_all("tr")
-
-    for row in rows:
-        td = row.find_all("td")
-        date = td[0].text.strip()
-        market_cap = td[1].text.strip()
-        percent_change = td[2].text.strip()
-
-        data.append([date, market_cap, percent_change])
+    data = get_data_from_time_series_table(table)
 
     return data
 
@@ -111,18 +88,6 @@ def get_revenue_history(stock: str) -> List:
     target_div = tareted_div[0]
 
     table = target_div.find("table")
-    tbody = table.find("tbody")
-    rows = tbody.find_all("tr")
-
-    for row in rows:
-        td = row.find_all("td")
-        date = td[0].text.strip()
-        revenue = td[1].text.strip()
-        percent_change = td[2].text.strip()
-
-        data.append([date, revenue, percent_change])
+    data = get_data_from_time_series_table(table)
 
     return data
-
-
-print(get_revenue_history("aapl"))

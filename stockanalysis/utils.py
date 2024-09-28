@@ -39,11 +39,27 @@ def get_data_from_time_series_table(table):
     return metadata, data
 
 
-def get_data_from_multi_period_comparison_table(table):
-    return
+def get_data_from_financials_table(table):
+    # compute meta data
+    metadata = []
+    rows = table.find_all("tr")
+    n = len(rows[0].contents) - 1
+    
+    for row in rows:
+        first_element = next(row.children)
+        metadata.append(first_element.text.strip())
 
+    # compute data
+    data = [[] for _ in range(n)]
 
+    for row in rows:
+        for i in range(n):
+            data[i].append(row.contents[i+1].text.strip())
 
+    # filter data
+    data = list(filter(lambda x: x[0] != '', data))
+
+    return metadata, data
 
 
 def print_dict(dictionary):
