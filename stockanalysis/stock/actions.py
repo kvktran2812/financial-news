@@ -33,11 +33,24 @@ def check_action_type(action_type: str) -> bool:
     return action_type in ALL_ACTIONS
 
 
-def get_actions_by_type(action_type: str) -> List:
+def check_year(year: int) -> bool:
+    return year >= 1998 or -1
+
+
+def compute_action_url(action_type: str, year: int = -1) -> str:
     if not check_action_type(action_type):
         raise ValueError(f"{action_type} is not a valid action type")
+    if not check_year(year):
+        raise ValueError(f"{year} is not a valid year")
     
-    url = f"https://stockanalysis.com/actions/{action_type}"
+    if year == -1:
+        return f"https://stockanalysis.com/actions/{action_type}"
+    
+    return f"https://stockanalysis.com/actions/{action_type}/{year}"
+
+
+def get_actions_by_type(action_type: str, year: int = -1) -> List:
+    url = compute_action_url(action_type, year)
     data = []
     
     response = requests.get(url)
