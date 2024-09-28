@@ -66,3 +66,29 @@ def get_industries() -> List:
     data = get_data_from_time_series_table(table)
 
     return data
+
+
+def get_sector_detail(sector: str) -> List:
+    data = []
+    url = f"{BASE_URL}/sector/{sector}"
+
+    resonse = requests.get(url)
+    html = resonse.text
+    soup = BeautifulSoup(html, "lxml")
+    table = soup.find("table", {"id": "main-table"})
+    data = get_data_from_time_series_table(table)
+
+    return data
+
+
+def get_industry_detail(industry: str) -> List:
+    data = []
+    url = f"{BASE_URL}/industry/{industry}"
+
+    resonse = requests.get(url)
+    html = resonse.text
+    soup = BeautifulSoup(html, "lxml")
+    table = soup.find("table", {"id": "main-table"})
+    data = get_data_from_time_series_table(table)
+
+    return data
