@@ -3,3 +3,4 @@ web_driver
 __pycache__/
 try.py
 api/stockanalysis
+logs/
