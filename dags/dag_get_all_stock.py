@@ -1,14 +1,12 @@
 from datetime import datetime, timedelta
-
-from airflow import DAG
-from airflow.operators.python import PythonOperator
 from airflow.decorators import task, dag
-from airflow.providers.postgres.hooks.postgres import PostgresHook
+from airflow.hooks.base_hook import BaseHook
+
+import psycopg2
 
 # import stockanalysis web scraping module
 from stockanalysis.stock.overview import get_all_stocks
-
-import psycopg2
+from stockanalysis.transform.stock import transform_market_cap
 
 default_args = {
     'owner': 'kvktran',
@@ -27,49 +25,44 @@ def dag_get_all_stocks():
 
     @task
     def get_stock_list():
-        metadata, data = get_all_stocks()
-        return {
-            "metadata": metadata,  
-            "data": data
-        }
+        _, data = get_all_stocks()
+        return data
     
     @task
-    def transform_data(metadata, data):
-        pass
+    def transform_data(data):
+        for i in range(len(data)):
+            value, unit = transform_market_cap(data[i][-1])
+            data[i][-1] = value
+            data[i].append(unit)
 
-
-    @task
-    def create_table():
-        hook = PostgresHook(postgres_conn_id='postgresql_conn')
-
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS stocks (
-                id SERIAL PRIMARY KEY,
-                symbol VARCHAR(8),
-                company_name VARCHAR(128),
-                industry VARCHAR(128),
-                market_cap NUMERIC
-            )
-        """
-
-        hook.run(create_table_query)
-        print("Create table successfully!")
+        return data
+        
         
 
     @task
-    def load_data(metadata, data):
-        pass
+    def load_data(data):
+        stocks_insert_query = """
+            INSERT INTO stocks (symbol, company_name, industry, market_cap, unit)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        conn = BaseHook.get_connection('postgresql_conn')
 
-    # t = get_stock_list()
-    # metadata = t["metadata"]
-    # data = t["data"]
-    # metadata, data = None, None
-    # transform_data(metadata, data)
-    # load_data(metadata, data)
+        connection = psycopg2.connect(
+            host=conn.host,
+            port=conn.port,
+            database=conn.schema,
+            user=conn.login,
+            password=conn.password
+        )
+        cursor = connection.cursor()
+        cursor.executemany(stocks_insert_query, data)
+        connection.commit()
+        connection.close()
 
-    create_table()
-
-
+    data = get_stock_list()
+    data = transform_data(data)
+    load_data(data)
+    
 
 # Call the DAG function to run the DAG
 get_stocks_dag = dag_get_all_stocks()

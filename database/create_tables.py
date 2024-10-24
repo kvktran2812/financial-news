@@ -35,7 +35,8 @@ try:
         symbol VARCHAR(8),
         company_name VARCHAR(128),
         industry VARCHAR(128),
-        market_cap NUMERIC
+        market_cap NUMERIC,
+        unit VARCHAR(1)
     );
     '''
 
