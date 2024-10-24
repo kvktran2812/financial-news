@@ -1,3 +1,5 @@
+# This script is for creating tables in PostgreSQL database
+
 import psycopg2
 
 # Database connection details
@@ -6,6 +8,14 @@ DB_PORT = "5555"       # PostgreSQL default port
 DB_NAME = "airflow"   # Default PostgreSQL database
 DB_USER = "airflow"   # Default PostgreSQL user
 DB_PASSWORD = "airflow"  # The password you set for the container
+
+
+def create_table(table_name, cursor, connection, query):
+    cursor.execute(query)
+    connection.commit()
+
+    print(f"Table {table_name} created successfully!")
+    
 
 try:
     # Connect to PostgreSQL
@@ -18,34 +28,19 @@ try:
     )
     cursor = connection.cursor()
 
-    # Create a table if it doesn't already exist
-    create_table_query = '''
-    CREATE TABLE IF NOT EXISTS employees (
+    # Create tables queries setup
+    create_stocks_table_query = '''
+    CREATE TABLE IF NOT EXISTS stocks (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        position VARCHAR(100),
-        salary NUMERIC
+        symbol VARCHAR(8),
+        company_name VARCHAR(128),
+        industry VARCHAR(128),
+        market_cap NUMERIC
     );
     '''
-    cursor.execute(create_table_query)
-    connection.commit()
 
-    # Insert data into the table
-    insert_query = '''
-    INSERT INTO employees (name, position, salary)
-    VALUES (%s, %s, %s);
-    '''
-    employees = [
-        ("John Doe", "Software Engineer", 70000),
-        ("Jane Smith", "Data Scientist", 80000),
-        ("Mike Johnson", "DevOps Engineer", 75000),
-    ]
-
-    # Execute multiple inserts in one go
-    cursor.executemany(insert_query, employees)
-    connection.commit()
-
-    print(f"{cursor.rowcount} records inserted successfully into employees table")
+    # Create tables in PostgreSQL
+    create_table("stocks", cursor, connection, create_stocks_table_query)
 
 except Exception as error:
     print(f"Error while inserting into PostgreSQL: {error}")
