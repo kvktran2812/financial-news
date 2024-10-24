@@ -2,25 +2,42 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from stockanalysis.trending import get_trending
+from airflow.decorators import task, dag
 
 
 default_args = {
-    'owner': 'coder2j',
+    'owner': 'kvktran',
     'retries': 5,
     'retry_delay': timedelta(minutes=5)
 }
 
-
-with DAG(
+@dag(
     default_args=default_args,
-    dag_id='get_trending_dag',
-    description='Our first dag using python operator',
-    start_date=datetime(2024, 10, 9),
-    schedule_interval='@daily'
-) as dag:
-    task1 = PythonOperator(
-        task_id='greet',
-        python_callable=get_trending,
-        # op_kwargs={'some_dict': {'a': 1, 'b': 2}}
-    )
+    dag_id='task_flow_api',
+    description='Our first dag using task flow api',
+    start_date=datetime(2024, 10, 8),
+    schedule_interval=timedelta(days=1)
+)
+def task_flow_api():
+
+    @task(multiple_outputs=True)
+    def get_name():
+        return {
+            "first_name": 'Donald',
+            "last_name": 'Tran'
+        }
+
+    @task
+    def get_age():
+        return 25
+
+    @task
+    def greet(first_name, last_name, age):
+        print(f"Hello World!!!, This is {first_name} {last_name} with {age} years old!")
+
+    name = get_name()
+    age = get_age()
+    greet(name["first_name"], name["last_name"], age)
+
+
+my_dag = task_flow_api()

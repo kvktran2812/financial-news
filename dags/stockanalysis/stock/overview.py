@@ -74,7 +74,7 @@ def get_table_body_data(table) -> List[List[str]]:
     return tbody_data
 
 
-def get_all_stocks(stock_per_page=500) -> List[List[str]]:
+def get_all_stocks(stock_per_page=500, early_stop=False) -> List[List[str]]:
     """
     Get all stocks from stockanalysis website
 
@@ -87,9 +87,11 @@ def get_all_stocks(stock_per_page=500) -> List[List[str]]:
     # setup url and data variable
     url = "https://stockanalysis.com/stocks/"
     data = None
+    metadata = []
 
     # setup chrome 
     chrome_options = Options()
+    chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(options=chrome_options)
     wait = WebDriverWait(driver, 10)
 
@@ -102,9 +104,14 @@ def get_all_stocks(stock_per_page=500) -> List[List[str]]:
     html = elements.get_attribute("innerHTML")
     soup = BeautifulSoup(html, "lxml")
     table = soup.find("table", {"id": "main-table"})
-    data = get_table_body_data(table)
+    # data = get_table_body_data(table)
+    metadata, data = get_data_from_time_series_table(table)
     n = get_number_of_stocks(soup)
     n = n // stock_per_page
+
+    # early stop
+    if early_stop:
+        return metadata, data
 
     # go to next page and keep fetching data until reach last stock
     for i in range(n):
@@ -121,7 +128,7 @@ def get_all_stocks(stock_per_page=500) -> List[List[str]]:
     driver.quit()
 
     # return data
-    return data
+    return metadata, data
 
 
 def get_stock_overview(stock: str) -> Dict[str, str]:

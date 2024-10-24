@@ -13,6 +13,4 @@ def get_trending() -> List:
     table = soup.find("table", {"id": "main-table"})
     data = get_data_from_time_series_table(table)
 
-    print(table.prettify())
-
     return data
