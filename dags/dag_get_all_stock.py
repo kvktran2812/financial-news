@@ -36,14 +36,13 @@ def dag_get_all_stocks():
             data[i].append(unit)
 
         return data
-        
-        
 
     @task
     def load_data(data):
         stocks_insert_query = """
             INSERT INTO stocks (symbol, company_name, industry, market_cap, unit)
             VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (symbol) DO NOTHING;
         """
         conn = BaseHook.get_connection('postgresql_conn')
 

@@ -31,8 +31,7 @@ try:
     # Create tables queries setup
     create_stocks_table_query = '''
     CREATE TABLE IF NOT EXISTS stocks (
-        id SERIAL PRIMARY KEY,
-        symbol VARCHAR(8),
+        symbol VARCHAR(8) PRIMARY KEY,
         company_name VARCHAR(128),
         industry VARCHAR(128),
         market_cap NUMERIC,
